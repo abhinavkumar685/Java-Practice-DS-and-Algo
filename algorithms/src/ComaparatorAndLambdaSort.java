@@ -162,6 +162,7 @@ public class ComaparatorAndLambdaSort {
          */
         Collections.sort(list, new Comparator<ComparePair>() {
             @Override
+            // Increasing Order
             public int compare(ComparePair p1, ComparePair p2) {
                 if(p1.val1 < p2.val1) {
                     return -1;

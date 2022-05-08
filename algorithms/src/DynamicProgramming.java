@@ -299,13 +299,13 @@ public class DynamicProgramming {
                     dp[row][col] = true;
                 }
                 else {
-                    if(dp[row-1][col] == true) {
+                    if(dp[row - 1][col]) {
                         dp[row][col] = true;
                     }
                     else {
                         int val = arr[row-1];
                         if(col >= val) {
-                            if(dp[row-1][col-val] == true) {
+                            if(dp[row - 1][col - val]) {
                                 dp[row][col] = true;
                             }
                         }
@@ -314,6 +314,32 @@ public class DynamicProgramming {
             }
         }
         System.out.println(dp[arr.length][target]);
+    }
+
+    public void targetSumSubsetCount(int[] arr, int target) {
+//        int[] arr = {4, 2, 7, 1, 3};
+//        int target = 10;
+
+        int[][] dp = new int[arr.length + 1][target + 1];
+        for(int i=0; i< dp.length; i++) {
+            for(int j=0; j<dp[0].length; j++) {
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 1;
+                } else if (i == 0) {
+                    dp[i][j] = 0;
+                } else if (j == 0) {
+                    dp[i][j] = 1;
+                } else {
+                    dp[i][j] += dp[i-1][j];
+                    int val = arr[i-1];
+
+                    if(j-val >= 0) {
+                        dp[i][j] += dp[i-1][j-val];
+                    }
+                }
+            }
+        }
+        System.out.println(dp[dp.length-1][dp[0].length-1]);
     }
 
     public boolean canEqualPartition(int[] arr) {
@@ -457,7 +483,7 @@ public class DynamicProgramming {
     static void countEncodings(String str) {
         // https://www.youtube.com/watch?v=jFZmBQ569So
         int n = str.length();
-        int[] dp = new int[10];
+        int[] dp = new int[str.length()];
         dp[0] = 1;
 
         for(int i=1; i<n; i++) {

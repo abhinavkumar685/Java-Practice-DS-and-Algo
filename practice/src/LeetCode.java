@@ -242,12 +242,33 @@ public class LeetCode {
         return result;
     }
 
+    public static void getTargetSubarrayIndex(int[] arr, int n, int target) {
+        int currentSum = 0;
+        int start = 0;
+        for(int i=0; i<n; i++) {
+            while(currentSum > target && start < i) {
+                currentSum -= arr[start];
+                start++;
+            }
+            if(currentSum == target) {
+                System.out.println("Left Index: " + start + ", Right Index: " + i);
+                return;
+            }
+            currentSum += arr[i];
+        }
+        System.out.println("No Sub-array found");
+    }
+
     public static void main(String[] args) {
 //        int[] gas = {1,2,3,4,5};
 //        int[] cost = {3,4,5,1,2};
 
-        int[] gas = {2,3,4};
-        int[] cost = {3,4,3};
-        System.out.println(canCompleteCircuit(gas, cost));
+//        int[] arr = {1, 2, 3, 7, 5};
+//        int target = 12;
+        int[] arr = {1,2,3,22,33};
+        int target = 55;
+        int n = arr.length;
+
+        getTargetSubarrayIndex(arr, n, target);
     }
 }

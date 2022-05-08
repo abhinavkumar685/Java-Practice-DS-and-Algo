@@ -1223,7 +1223,7 @@ public class LeetCode {
                 continue;
             }
             else {
-                sb.append(String.valueOf(val));
+                sb.append(val);
                 flag = true;
             }
         }
@@ -1353,6 +1353,68 @@ public class LeetCode {
             }
         }
         return count;
+    }
+
+    private void searchCombination(int sum, List<Integer> composed, int index, int[] candidates, int target, List<List<Integer>> result) {
+        // https://leetcode.com/problems/combination-sum-ii/
+        if(sum == target) {
+            result.add(new ArrayList<>(composed));
+            return;
+        }
+
+        for(int i = index; i < candidates.length; i++) {
+            int num = candidates[i];
+
+            // skip duplicates
+            if(i != index && num == candidates[i - 1]) {
+                continue;
+            }
+
+            if(sum + num > target) {
+                continue;
+            }
+
+            composed.add(num);
+            searchCombination(sum + num, composed, i+1, candidates, target, result);
+            composed.remove(composed.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        // https://leetcode.com/problems/combination-sum-ii/
+        Arrays.sort(candidates);
+        List<List<Integer>> result = new ArrayList<>();
+        searchCombination(0, new ArrayList<>(), 0, candidates, target, result);
+        return result;
+    }
+
+    public String addStrings(String num1, String num2) {
+        // https://leetcode.com/problems/add-strings/
+
+        if(num1 == null || num1.length() == 0) return num2;
+        if(num2 == null || num2.length() == 0) return num1;
+
+        int sum = 0;
+        int carry = 0;
+        StringBuilder sb = new StringBuilder();
+        int index1 = num1.length() - 1;
+        int index2 = num2.length() - 1;
+
+        while(index1 >= 0 || index2 >= 0) {
+            int val1 = index1>=0 ? num1.charAt(index1)-'0' : 0;
+            int val2 = index2>=0 ? num2.charAt(index2)-'0' : 0;
+            sum = val1 + val2 + carry;
+            sb.append(String.valueOf(sum%10));
+            carry = sum / 10;
+            index1--;
+            index2--;
+        }
+
+        if(carry != 0) {
+            sb.append(String.valueOf(carry));
+        }
+
+        return sb.reverse().toString();
     }
 
     public static void main(String[] args) {
