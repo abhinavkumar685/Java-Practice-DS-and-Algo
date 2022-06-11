@@ -305,6 +305,190 @@ class LinkedList{
         }
         return dummy.next;
     }
+    public Node reverseKGroupAddFirstMethod(Node head, int k) {
+        // https://www.youtube.com/watch?v=EKgNMFCShO8
+        // https://leetcode.com/problems/reverse-nodes-in-k-group/
+        if(head == null || head.next == null || k<2) {
+            return head;
+        }
+
+        int length = 0;
+        Node current = head;
+        while(current != null) {
+            current = current.next;
+            length++;
+        }
+
+        Node orgHead = null;
+        Node orgTail = null;
+
+        class AddFirstNode {
+            Node tempHead = null;
+            Node tempTail = null;
+
+            public void addFirst(Node node) {
+                if(tempHead == null) {
+                    tempHead = node;
+                    tempTail = node;
+                }
+                else {
+                    node.next = tempHead;
+                    tempHead = node;
+                }
+            }
+        }
+
+        AddFirstNode afn = new AddFirstNode();
+        current = head;
+        while(length >= k) {
+            int tempK = k;
+            while(tempK > 0) {
+                Node future = current.next;
+                current.next = null;
+                afn.addFirst(current);
+                current = future;
+                tempK--;
+            }
+
+            if(orgHead == null) {
+                orgHead = afn.tempHead;
+                orgTail = afn.tempTail;
+            }
+            else {
+                orgTail.next = afn.tempHead;
+                orgTail = afn.tempTail;
+            }
+            afn.tempHead = null;
+            afn.tempTail = null;
+            length -= k;
+        }
+
+        orgTail.next = current;
+        return orgHead;
+    }
+
+    public Node reverseListAddFirst(Node head) {
+        // https://www.youtube.com/watch?v=TOztSNeXZuw
+        // https://leetcode.com/problems/reverse-linked-list/
+        if(head == null) return head;
+        class AddFirst {
+            Node head = null;
+            Node tail = null;
+
+            public void addFirst(Node node) {
+                if(head == null) {
+                    head = node;
+                    tail = node;
+                }
+                else {
+                    node.next = head;
+                    head = node;
+                }
+            }
+        }
+
+        AddFirst afn = new AddFirst();
+
+        Node current = head;
+        while(current != null) {
+            Node forward = current.next;
+            current.next = null;
+            afn.addFirst(current);
+            current = forward;
+        }
+
+        return afn.head;
+    }
+
+    public Node deleteAllDuplicates(Node head) {
+        // https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
+        // https://www.youtube.com/watch?v=7PGsMXlMzGA
+        if(head == null) return head;
+
+        Node dummy = new Node(-1);
+        Node itr = dummy;
+        itr.next = head;
+
+        Node current = head.next;
+
+        while(current != null) {
+            boolean flag = false;
+            while(current != null && itr.next.data == current.data) {
+                flag = true;
+                current = current.next;
+            }
+
+            if(flag) {
+                itr.next = current;
+            }
+            else {
+                itr = itr.next;
+            }
+
+            if(current != null) {
+                current = current.next;
+            }
+        }
+        return dummy.next;
+    }
+
+    public Node getMid(Node head) {
+        if(head == null || head.next == null) return head;
+
+        Node fast = head;
+        Node slow = head;
+
+        while(fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        return slow;
+    }
+
+    public Node reverse(Node head) {
+        if(head == null || head.next == null) {
+            return head;
+        }
+
+        Node prev = null;
+        Node future = null;
+        Node current = head;
+
+        while(current != null) {
+            future = current.next;
+            current.next = prev;
+            prev = current;
+            current = future;
+        }
+
+        return prev;
+    }
+
+    public boolean isPalindrome(Node head) {
+        // https://leetcode.com/problems/palindrome-linked-list/
+        // https://www.youtube.com/watch?v=rP4zdxydE_0
+        if(head == null || head.next == null) return true;
+
+        Node midNode = getMid(head);
+        Node nHead = midNode.next;
+        midNode.next = null;
+
+        Node head2 = reverse(nHead);
+
+        Node c1 = head;
+        Node c2 = head2;
+
+        while(c2 != null) {
+            if(c1.data != c2.data) {
+                return false;
+            }
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+
+        return true;
+    }
 
     Node Kreverse(Node head, int k) {
         Node current = head;
@@ -643,11 +827,11 @@ class LinkedList{
     }
 
     public Node reverseLL(Node head) {
-        if(head == null || head.next == null) return head;
+        if (head == null || head.next == null) return head;
 
         Node prev = null;
         Node current = head;
-        while(current != null) {
+        while (current != null) {
             Node future = current.next;
             current.next = prev;
             prev = current;
@@ -655,40 +839,6 @@ class LinkedList{
         }
         return prev;
     }
-
-    public boolean isPalindrome(Node head) {
-        // Non working code currently
-        // https://leetcode.com/problems/palindrome-linked-list
-        // https://www.youtube.com/watch?v=rP4zdxydE_0
-        if(head == null || head.next == null) {
-            return true;
-        }
-
-        Node mid = getMidNode(head);
-        Node nextHead = mid.next;
-        mid.next = null;
-
-        nextHead = reverseLL(nextHead);
-        Node h1 = head;
-        Node h2 = nextHead;
-
-        boolean resp = true;
-        // Checking only h2 because for odd length, h2 will be shorter than h1
-        while(h2 != null) {
-            if(h1.data != h2.data) {
-                resp = false;
-                break;
-            }
-            h1 = h1.next;
-            h2 = h2.next;
-        }
-        // Making LL in original form
-        nextHead = reverseLL(nextHead);
-        mid.next = nextHead;
-        return resp;
-
-    }
-
 }
 
 

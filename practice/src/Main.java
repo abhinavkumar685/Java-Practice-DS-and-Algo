@@ -1,10 +1,10 @@
 import java.util.*;
 
-class Graph {
+class GraphTest {
     int vertex;
     ArrayList<ArrayList<Integer>> adj_list;
 
-    Graph(int ver) {
+    GraphTest(int ver) {
         this.vertex = ver;
         this.adj_list = new ArrayList<ArrayList<Integer>>(ver);
         for(int i=0; i<ver; i++) {
@@ -48,7 +48,7 @@ public class Main{
     public static void main(String[] args)
     {
         int vertex = 4;
-        Graph g = new Graph(vertex);
+        GraphTest g = new GraphTest(vertex);
 
         g.addEdge(0, 1);
         g.addEdge(0, 2);

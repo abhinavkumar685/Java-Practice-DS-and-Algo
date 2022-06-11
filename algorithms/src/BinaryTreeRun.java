@@ -2003,6 +2003,27 @@ public class BinaryTreeRun {
         return root;
     }
 
+    public void flatten(BTNode root) {
+        // https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+        // https://www.youtube.com/watch?v=NOKVBiJwkD0
+        if(root == null) return;
+
+        BTNode leftSubtree = root.left;
+        BTNode rightSubtree = root.right;
+        root.left = null;
+
+        flatten(leftSubtree);
+        flatten(rightSubtree);
+
+        root.right = leftSubtree;
+        BTNode current = root;
+        while(current.right != null) {
+            current = current.right;
+        }
+
+        current.right = rightSubtree;
+    }
+
     public static void main(String[] args) {
         BinaryTree BT = new BinaryTree();
 //        BTNode root = BT.createTree();

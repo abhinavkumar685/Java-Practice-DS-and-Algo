@@ -1,0 +1,57 @@
+Refer: https://www.youtube.com/watch?v=yldrIdoXiYk
+
+Book
+    int id (PK)
+    String name
+    String bookType
+    String category (FK Category.id)
+    String publicationYear
+
+Category
+    int id (PK)
+    String category
+
+Author
+    int id (PK)
+    String firstName
+    String LastName
+
+Book_Author_Map
+    int bookId (FK from Book)
+    int authorID (FK from Author)
+
+Member
+    int id (PK)
+    String firstName
+    String LastName
+    String status
+
+Loan
+    int id (PK)
+    int bookId (FK Book.id)
+    int memberId (FK Member.id)
+    String issueDate
+
+Reservation
+    int id (PK)
+    int bookId (FK Book.id)
+    int memberId (FK Member.id)
+    String reservationDate
+    String reservationStatus (FK ReservationStatus.status)
+
+ReservationStatus
+    int id (PK)
+    String status
+
+Fine
+    int id (PK)
+    int memberId (FK Member.id)
+    int loanId (FK Loan.id)
+    String fineDate
+    String fineAmount
+
+Fine Payment
+    int id (PK)
+    int memberId (FK Memeber.id)
+    String PaymentDate
+    String PaymentAmount

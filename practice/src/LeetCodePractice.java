@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class LeetCode {
+public class LeetCodePractice {
     public static String zigZagSolution(String s, int numRows) {
         StringBuilder[] array = new StringBuilder[numRows];
         for(int u=0; u<numRows; u++) {

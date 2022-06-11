@@ -93,6 +93,16 @@ public class BinarySearchTree {
         return createBSTFromPostorder(postorder, leftRange, rightRange);
     }
 
+    public int countNodes(BSTNode root) {
+        // https://leetcode.com/problems/count-complete-tree-nodes/
+        if(root == null) return 0;
+
+        int leftCount = countNodes(root.left);
+        int rightCount = countNodes(root.right);
+
+        return 1 + leftCount + rightCount;
+    }
+
     static int maxValue(BSTNode root) {
         if(root != null) {
             return maxValue(root.right);
@@ -127,6 +137,7 @@ public class BinarySearchTree {
 
     static BSTNode addNode(BSTNode root, int val) {
         // https://www.youtube.com/watch?v=lraQt-zHOHk
+        // https://leetcode.com/problems/insert-into-a-binary-search-tree/
         if(root == null) {
             return new BSTNode(val);
         }
@@ -136,6 +147,58 @@ public class BinarySearchTree {
         else if(val > root.data) {
             root.right = addNode(root.right, val);
         }
+        return root;
+    }
+
+    public int max(BSTNode root) {
+        if(root.right != null) {
+            return max(root.right);
+        }
+        else {
+            return root.data;
+        }
+    }
+
+    public BSTNode deleteNode(BSTNode root, int key) {
+        if(root == null) return null;
+
+        if(key > root.data) {
+            root.right = deleteNode(root.right, key);
+        }
+        else if(key < root.data) {
+            root.left = deleteNode(root.left, key);
+        }
+        else {
+            // leaf node
+            if(root.left != null && root.right != null) {
+                int lmax = max(root.left);
+                root.left = deleteNode(root.left, lmax);
+                root.data = lmax;
+                return root;
+            }
+            else if(root.left != null) {
+                return root.left;
+            }
+            else if(root.right != null) {
+                return root.right;
+            }
+            else {
+                return null;
+            }
+        }
+        return root;
+    }
+
+    int sum = 0;
+    public BSTNode largerBST(BSTNode root) {
+        // https://leetcode.com/problems/binary-search-tree-to-greater-sum-tree/
+        // https://www.youtube.com/watch?v=MLff3CxNVTc
+        if(root == null) return root;
+        largerBST(root.right);
+        int val = root.data;
+        root.data = root.data + sum;
+        sum += val;
+        largerBST(root.left);
         return root;
     }
 

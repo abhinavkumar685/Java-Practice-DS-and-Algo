@@ -1,12 +1,9 @@
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 
 public class practiceTest {
     public static void getMAxProductSet(int[] arr) {
         int length = arr.length;
-        HashSet<Integer> result = new HashSet<Integer>();
+        HashSet<Integer> result = new HashSet<>();
         if(length == 0) {
             System.out.println(result);
             return;

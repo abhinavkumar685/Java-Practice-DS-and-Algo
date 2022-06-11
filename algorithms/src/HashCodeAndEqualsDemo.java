@@ -8,11 +8,11 @@
 
 import java.util.*;
 
-class Student {
+class StudentClass {
     String name;
     int roll;
 
-    Student(String name, int roll) {
+    StudentClass(String name, int roll) {
         this.name = name;
         this.roll = roll;
     }
@@ -30,7 +30,7 @@ class Student {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Student other = (Student) obj;
+        StudentClass other = (StudentClass) obj;
         return Objects.equals(name, other.name);
     }
 
@@ -41,24 +41,24 @@ class Student {
 
 
 public class HashCodeAndEqualsDemo {
-    public static List<Student> filter(List<Student> list) {
-        Set<Student> set = new HashSet<>();
-        for(Student s : list) {
+    public static List<StudentClass> filter(List<StudentClass> list) {
+        Set<StudentClass> set = new HashSet<>();
+        for(StudentClass s : list) {
             set.add(s);
         }
 
-        return new ArrayList<Student>(set);
+        return new ArrayList<StudentClass>(set);
     }
 
     public static void main(String[] args) {
         // Two students are same if name are equals irrespective of roll no
-        Student s1 = new Student("abhi", 1);
-        Student s2 = new Student("abhi", 2);
-        Student s3 = new Student("abhi", 3);
-        Student s4 = new Student("abhi1", 4);
-        Student s5 = new Student("abhi2", 5);
+        StudentClass s1 = new StudentClass("abhi", 1);
+        StudentClass s2 = new StudentClass("abhi", 2);
+        StudentClass s3 = new StudentClass("abhi", 3);
+        StudentClass s4 = new StudentClass("abhi1", 4);
+        StudentClass s5 = new StudentClass("abhi2", 5);
 
-        List<Student> list = new ArrayList<>();
+        List<StudentClass> list = new ArrayList<>();
         list.add(s1);
         list.add(s2);
         list.add(s3);

@@ -735,6 +735,30 @@ public class Strings {
         return Math.min(count1, count2);
     }
 
+    public int minFlips(String S) {
+        // First Char Start with 0
+        int count1 = 0;
+        char expected = '0';
+        for(char c : S.toCharArray()) {
+            if(c != expected) {
+                count1++;
+            }
+            expected = expected == '0' ? '1' : '0';
+        }
+
+        // First Char Start with 1
+        int count2 = 0;
+        expected = '1';
+        for(char c : S.toCharArray()) {
+            if(c != expected) {
+                count2++;
+            }
+            expected = expected == '0' ? '1' : '0';
+        }
+
+        return Math.min(count1, count2);
+    }
+
     public static void main(String[] args) {
         Strings obj = new Strings();
         String str1 = "a1b1";

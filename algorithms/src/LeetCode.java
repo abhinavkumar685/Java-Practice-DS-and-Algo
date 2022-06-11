@@ -1163,6 +1163,25 @@ public class LeetCode {
         return sb.toString();
     }
 
+    String printLargest(String[] arr) {
+        // https://www.geeksforgeeks.org/given-an-array-of-numbers-arrange-the-numbers-to-form-the-biggest-number/
+        Arrays.sort(arr, new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                String XY = s1 + s2;
+                String YX = s2 + s1;
+
+                return YX.compareTo(XY);
+            }
+        });
+
+        StringBuilder sb = new StringBuilder();
+        for(String s : arr) {
+            sb.append(s);
+        }
+
+        return sb.toString();
+    }
+
     public int findUnsortedSubarray(int[] nums) {
         // https://leetcode.com/problems/shortest-unsorted-continuous-subarray
         // https://www.youtube.com/watch?v=Z4DJwKEFkNI
@@ -1355,36 +1374,60 @@ public class LeetCode {
         return count;
     }
 
-    private void searchCombination(int sum, List<Integer> composed, int index, int[] candidates, int target, List<List<Integer>> result) {
-        // https://leetcode.com/problems/combination-sum-ii/
-        if(sum == target) {
-            result.add(new ArrayList<>(composed));
+    public void combinationSumBacktrack(List<List<Integer>> result, List<Integer> current, int currentSum, int index, int[] candidates, int target) {
+        if(currentSum == target) {
+            result.add(new ArrayList<Integer>(current));
             return;
         }
 
-        for(int i = index; i < candidates.length; i++) {
-            int num = candidates[i];
+        if(currentSum > target) {
+            return;
+        }
 
-            // skip duplicates
-            if(i != index && num == candidates[i - 1]) {
+        for(int i=index; i<candidates.length; i++) {
+            if(i > index && candidates[i] == candidates[i-1]) {
                 continue;
             }
 
-            if(sum + num > target) {
-                continue;
-            }
-
-            composed.add(num);
-            searchCombination(sum + num, composed, i+1, candidates, target, result);
-            composed.remove(composed.size() - 1);
+            current.add(candidates[i]);
+            combinationSumBacktrack(result, current, currentSum + candidates[i], i+1, candidates, target);
+            current.remove(current.size() - 1);
         }
     }
 
     public List<List<Integer>> combinationSum2(int[] candidates, int target) {
-        // https://leetcode.com/problems/combination-sum-ii/
+        // https://www.youtube.com/watch?v=dvZdWR0sHMk
         Arrays.sort(candidates);
+
         List<List<Integer>> result = new ArrayList<>();
-        searchCombination(0, new ArrayList<>(), 0, candidates, target, result);
+        List<Integer> current = new ArrayList<>();
+        int index = 0;
+        int currentSum = 0;
+
+        combinationSumBacktrack(result, current, currentSum, index, candidates, target);
+        return result;
+
+    }
+
+    public void backtrackSubset(List<List<Integer>> result,
+                                List<Integer> current, int index, int[] nums) {
+
+        result.add(new ArrayList<Integer>(current));
+        for(int i=index; i<nums.length; i++) {
+            current.add(nums[i]);
+            backtrackSubset(result, current, i+1, nums);
+            current.remove(current.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> subsetsOrPowersetMethod2(int[] nums) {
+        // One good method helpful in other problems
+        // https://leetcode.com/problems/subsets/
+        //https://www.youtube.com/watch?v=kYY9DotIKlo
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> current = new ArrayList<>();
+        int index = 0;
+        backtrackSubset(result, current, index, nums);
         return result;
     }
 
@@ -1415,6 +1458,107 @@ public class LeetCode {
         }
 
         return sb.reverse().toString();
+    }
+
+    public int minimumDeleteSum(String s1, String s2) {
+        // https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/
+        // Concept: https://www.youtube.com/watch?v=GPePWKCEy24
+        // Better Code: https://www.youtube.com/watch?v=rRPbJL8wsMI
+        int n1 = s1.length();
+        int n2 = s2.length();
+
+        if(n1 == 0 && n2 == 0) return 0;
+
+        int[][] dp = new int[n1+1][n2+1];
+
+        for(int i=0; i<dp.length; i++) {
+            for(int j=0; j<dp[0].length; j++) {
+                if(i==0 && j==0) {
+                    dp[i][j] = 0;
+                }
+                else if(i==0) {
+                    dp[i][j] = (int)s2.charAt(j-1) + dp[i][j-1];
+                }
+                else if(j==0) {
+                    dp[i][j] = (int)s1.charAt(i-1) + dp[i-1][j];
+                }
+                else {
+                    if(s1.charAt(i-1) == s2.charAt(j-1)) {
+                        dp[i][j] = dp[i-1][j-1];
+                    }
+                    else {
+                        dp[i][j] = Math.min(dp[i-1][j] + s1.charAt(i-1),
+                                dp[i][j-1] + s2.charAt(j-1));
+                    }
+                }
+            }
+        }
+
+        return dp[dp.length-1][dp[0].length-1];
+    }
+
+    public int minDistanceAscii(String s1, String s2) {
+        // Only small diff from below problem
+        // https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/
+        int n1 = s1.length();
+        int n2 = s2.length();
+
+        if(n1 == 0 && n2 == 0) return 0;
+
+        int[][] dp = new int[n1+1][n2+1];
+
+        for(int i=0; i<dp.length; i++) {
+            for(int j=0; j<dp[0].length; j++) {
+                if(i==0 && j==0) {
+                    dp[i][j] = 0;
+                }
+                else if(i==0) {
+                    dp[i][j] = 1 + dp[i][j-1];
+                }
+                else if(j==0) {
+                    dp[i][j] = 1 + dp[i-1][j];
+                }
+                else {
+                    if(s1.charAt(i-1) == s2.charAt(j-1)) {
+                        dp[i][j] = dp[i-1][j-1];
+                    }
+                    else {
+                        dp[i][j] = Math.min(dp[i-1][j] + 1, dp[i][j-1] + 1);
+                    }
+                }
+            }
+        }
+
+        return dp[dp.length-1][dp[0].length-1];
+    }
+
+    public int findPairs(int[] nums, int k) {
+        // https://leetcode.com/problems/k-diff-pairs-in-an-array/
+        Map<Integer, Integer> map = new HashMap<>();
+        int n = nums.length;
+
+        for(int x : nums) {
+            map.put(x, map.getOrDefault(x, 0) + 1);
+        }
+
+        int count = 0;
+
+        if(k == 0) {
+            for(int key : map.keySet()) {
+                if(map.get(key) > 1) {
+                    count++;
+                }
+            }
+        }
+        else {
+            for(int key : map.keySet()) {
+                if(map.containsKey(key + k)) {
+                    count++;
+                }
+
+            }
+        }
+        return count;
     }
 
     public static void main(String[] args) {

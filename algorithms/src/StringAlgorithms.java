@@ -356,6 +356,45 @@ public class StringAlgorithms {
         return result;
     }
 
+    public boolean isConsecutive(String str) {
+        // https://www.geeksforgeeks.org/consecutive-sequenced-numbers-in-a-string/
+        for(int i=1; i<=str.length()/2; i++) {
+            String current = str.substring(0, i);
+            StringBuilder sb = new StringBuilder();
+            int start = Integer.parseInt(current);
+            while(sb.length() < str.length()) {
+                sb.append(start);
+                start++;
+            }
+
+            if(sb.toString().equals(str)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public String rle(String str) {
+        // https://www.geeksforgeeks.org/run-length-encoding/
+        int n = str.length();
+        if(n == 0) return "";
+
+        StringBuilder sb = new StringBuilder();
+
+        for(int i=0; i<n; i++) {
+            int count = 1;
+            while(i+1 < n && str.charAt(i) == str.charAt(i+1)) {
+                count++;
+                i++;
+            }
+            sb.append(str.charAt(i));
+            sb.append(count);
+        }
+
+        return sb.toString();
+    }
+
 
     public static void main(String[] args) {
         String s1 = "bcdbcdbcdbcd", t1 = "bcdbcd";

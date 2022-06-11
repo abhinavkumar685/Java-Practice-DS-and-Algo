@@ -1,4 +1,3 @@
-import com.sun.javafx.collections.ListListenerHelper;
 
 import java.util.*;
 
@@ -20,7 +19,7 @@ class GraphCreator {
 
     public void BFS(int source) {
         boolean[] visited = new boolean[this.vertices];
-        Queue<Integer> queue = new LinkedList<>();
+        Queue<Integer> queue = new ArrayDeque<>();
         queue.add(source);
         visited[source] = true;
         while (queue.size()!=0) {
