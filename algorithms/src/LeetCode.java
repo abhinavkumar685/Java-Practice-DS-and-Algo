@@ -1561,6 +1561,146 @@ public class LeetCode {
         return count;
     }
 
+    public boolean regularExpressionMatch(String s, String p) {
+        // https://leetcode.com/problems/regular-expression-matching/
+        // https://www.youtube.com/watch?v=DJvw8jCmxUU
+        int sLength = s.length();
+        int pLength = p.length();
+
+        boolean[][] dp = new boolean[pLength+1][sLength+1];
+        for(int i=0; i<dp.length; i++) {
+            for(int j=0; j<dp[i].length; j++) {
+                if(i==0 && j==0) {
+                    dp[i][j] = true;
+                }
+                else if(i==0) {
+                    dp[i][j] = false;
+                }
+                else if(j==0) {
+                    if(p.charAt(i-1) == '*') {
+                        dp[i][j] = (i-2 >= 0) ? dp[i-2][j] : true;
+                    }
+                    else {
+                        dp[i][j] = false;
+                    }
+                }
+                else {
+                    char pChar = p.charAt(i-1);
+                    char sChar = s.charAt(j-1);
+
+                    if(pChar == '*') {
+                        dp[i][j] = dp[i-2][j];
+
+                        char pSecondLastChar = p.charAt(i-2);
+                        if(pSecondLastChar == '.' || pSecondLastChar == sChar) {
+                            dp[i][j] = dp[i][j] || dp[i][j-1];
+                        }
+
+                    }
+                    else if(pChar == '.') {
+                        dp[i][j] = dp[i-1][j-1];
+                    }
+                    else if(pChar == sChar) {
+                        dp[i][j] = dp[i-1][j-1];
+                    }
+                    else {
+                        dp[i][j] = false;
+                    }
+                }
+            }
+        }
+
+        return dp[pLength][sLength];
+    }
+
+    public boolean wildcardMatch(String s, String p) {
+        // https://leetcode.com/problems/wildcard-matching/
+        // https://www.youtube.com/watch?v=NbgUZAoIz3g
+        int sLength = s.length();
+        int pLength = p.length();
+
+        boolean[][] dp = new boolean[pLength+1][sLength+1];
+        for(int i=0; i<dp.length; i++) {
+            for(int j=0; j<dp[i].length; j++) {
+                if(i==0 && j==0) {
+                    dp[i][j] = true;
+                }
+                else if(i==0) {
+                    dp[i][j] = false;
+                }
+                else if(j==0) {
+                    if(p.charAt(i-1) == '*') {
+                        dp[i][j] = dp[i-1][j];
+                    }
+                    else {
+                        dp[i][j] = false;
+                    }
+                }
+                else {
+                    char pChar = p.charAt(i-1);
+                    char sChar = s.charAt(j-1);
+
+                    if(pChar == '*') {
+                        for(int k=j; k>=0; k--) {
+                            if(dp[i - 1][k]) {
+                                dp[i][j] = true;
+                                break;
+                            }
+                        }
+                    }
+                    else if(pChar == '?') {
+                        dp[i][j] = dp[i-1][j-1];
+                    }
+                    else if(pChar == sChar) {
+                        dp[i][j] = dp[i-1][j-1];
+                    }
+                    else {
+                        dp[i][j] = false;
+                    }
+                }
+            }
+        }
+
+        return dp[pLength][sLength];
+    }
+
+    public int maximumGap(final List<Integer> A) {
+        // max distance
+        // https://www.geeksforgeeks.org/given-an-array-arr-find-the-maximum-j-i-such-that-arrj-arri/
+        // https://www.youtube.com/watch?v=Zyhxzg0WLWA
+        int n = A.size();
+        if(n < 2) {
+            return 0;
+        }
+
+        int[] left = new int[n];
+        left[0] = A.get(0);
+        for(int i=1; i<n; i++) {
+            left[i] = Math.min(left[i-1], A.get(i));
+        }
+
+        int[] right = new int[n];
+        right[n-1] = A.get(n-1);
+        for(int i=n-2; i>=0; i--) {
+            right[i] = Math.max(right[i+1], A.get(i));
+        }
+
+        int ans = Integer.MIN_VALUE;
+        int x=0, y=0;
+
+        while(x<n && y<n) {
+            if(left[x] <= right[y]) {
+                ans = Math.max(ans, y-x);
+                y++;
+            }
+            else {
+                x++;
+            }
+        }
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         int[] arr = {1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6};
         System.out.println(getDistinctCount(arr));

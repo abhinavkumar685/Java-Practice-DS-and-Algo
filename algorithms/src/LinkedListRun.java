@@ -262,6 +262,42 @@ class LinkedList{
         return prev.data;
     }
 
+    public static void removeLoop(Node head){
+        // https://www.youtube.com/watch?v=aIR0s1tY2Vk
+        // https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/
+        if(head == null || head.next == null) return;
+        Node slow = head;
+        Node fast = head;
+        while(fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if(slow == fast) {
+                break;
+            }
+        }
+
+        if(slow != fast) {
+            return;
+        }
+
+        slow = head;
+        if(slow != fast) {
+            while(slow.next != fast.next) {
+                slow = slow.next;
+                fast = fast.next;
+            }
+            fast.next = null;
+        }
+        else {
+            // Loop is attached to fiest node
+            while(fast.next != slow) {
+                fast = fast.next;
+            }
+            fast.next = null;
+        }
+
+    }
+
     public void removeNthNodeFromLast(int n) {
         if(head == null) return;
         Node fast = head;
